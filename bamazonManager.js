@@ -93,7 +93,9 @@ connection.query("SELECT * FROM products", function(err, result){
                     var newProductQuantity = parseInt(answers.q6)
                     // create connection to insert variables into sql
                     connection.query(`INSERT INTO products (product_name, price, department_name, stock_quantity) VALUES ("${newProduct}", ${newProductPrice}, "${newProductDepartment}", ${newProductQuantity})`, function(err, result){
-                        console.log(result)
+                        connection.query("SELECT * FROM products", function(err, result){
+                            console.log(result)
+                        })
                         connection.end()
                     })
             })// end answers function
