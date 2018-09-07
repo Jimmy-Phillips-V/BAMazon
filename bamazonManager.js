@@ -19,14 +19,14 @@ connection.query("SELECT * FROM products", function(err, result){
         }
     ]).then(function(answers){
         console.log(answers.q1)
-
+        // view products for sale
         if(answers.q1 == "View Products for Sale") {
             console.log(result)
             connection.end()
         }
+        // view low inventory
         else if(answers.q1 == "View Low Inventory") {
-            // for(var i = 0; i < result.length; i++) {
-            // var lowStock = result[i].stock_quantity <= 5
+            // establish connection to find products with low quantity
             connection.query('SELECT * FROM products WHERE stock_quantity <= 5', function(err, result) {
                 for(var i = 0; i < result.length; i++) {
                 console.log(result[i].product_name + ": " + result[i].stock_quantity)
@@ -34,6 +34,7 @@ connection.query("SELECT * FROM products", function(err, result){
                 }
             }
         )}
+        // add to inventory
         else if(answers.q1 == "Add to Inventory") {
             console.log(result)
             inquirer
@@ -44,6 +45,7 @@ connection.query("SELECT * FROM products", function(err, result){
                     message: "What is the name of the product you'd like to restock?"
                 }
             ]).then(function(answers){
+            // loop through all products to search for the product and then add to it
             for(var i = 0; i < result.length; i++) {
                 if(result[i].product_name == answers.q2) {
                     var newQuantity = result[i].stock_quantity + 15
@@ -59,6 +61,7 @@ connection.query("SELECT * FROM products", function(err, result){
                 }   
             })
         }
+        // add new product
         else if(answers.q1 == "Add New Product") {
             inquirer
             .prompt([
@@ -83,11 +86,13 @@ connection.query("SELECT * FROM products", function(err, result){
                     message: "What is the quantity of the product you'd like to add?"
                 }
             ]).then(function(answers){
+                // store answers in variables
                     var newProduct = answers.q3
                     var newProductPrice = parseInt(answers.q4)
                     var newProductDepartment = answers.q5
                     var newProductQuantity = parseInt(answers.q6)
-                    connection.query(`INSERT INTO products (product_name, price, department_name, stock_quantity) VALUES = ("${newProduct}", ${newProductPrice}, "${newProductDepartment}", ${newProductQuantity})`, function(err, result){
+                    // create connection to insert variables into sql
+                    connection.query(`INSERT INTO products (product_name, price, department_name, stock_quantity) VALUES ("${newProduct}", ${newProductPrice}, "${newProductDepartment}", ${newProductQuantity})`, function(err, result){
                         console.log(result)
                         connection.end()
                     })
